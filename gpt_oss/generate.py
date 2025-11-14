@@ -7,14 +7,24 @@ import argparse
 
 from gpt_oss.tokenizer import get_tokenizer
 
+from line_profiler import profile
 
+try:
+    profile # type: ignore
+except NameError:
+    profile = lambda f: f
+
+import os
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:False"
+
+@profile
 def main(args):
     match args.backend:
         case "torch":
             from gpt_oss.torch.utils import init_distributed
             from gpt_oss.torch.model import TokenGenerator as TorchGenerator
             device = init_distributed()
-            generator = TorchGenerator(args.checkpoint, device=device)
+            generator = TorchGenerator(args.checkpoint, device=device, pin_memory=True)
         case "triton":
             from gpt_oss.torch.utils import init_distributed
             from gpt_oss.triton.model import TokenGenerator as TritonGenerator

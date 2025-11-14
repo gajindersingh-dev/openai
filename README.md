@@ -10,6 +10,32 @@
 </p>
 
 <br>
+<h1>GPT-OSS-20B optimized to run on 8GB VRAM</h1>
+<ul> 
+<li>Use lazy load for Transformer layears (2.5 times slower than without lazy load, but can be runned on 8GB 3070Ti Laptop with 32GB RAM)</li>
+<li>Added kv_cache to speed up inference (torch)</li>
+<li>Optimized weight loading speed</li>
+<li>Optimized forward pass and attention</li>
+</ul>
+
+## 🎥 Demo Video
+
+Watch GPT-OSS 20B running on just 8GB of VRAM:
+
+[![GPT-OSS 20B Demo](https://englyk.com/gpt-oss-20b-8gb-vram.jpg)](https://englyk.com/gpt_oss_20b_8gb_vram.mp4)
+
+*Click the image to watch the full demonstration* or -
+[Watch on YouTube](https://youtu.be/0g7MBALZM8c)
+
+<h2>UPDATE: 08/31/2025 - Added support 6 Gb VRAM for gpt-oss-20b !!!</h2>
+
+- Optimized MLPBlock
+- gpt_oss.generate min 6 Gb VRAM
+- gpt_oss.chat min 8 Gb VRAM
+- gpt_oss.chat windows support with pyreadline3 module
+- auto tune options for awailable VRAM
+
+__________________________________________
 
 Welcome to the gpt-oss series, [OpenAI's open-weight models](https://openai.com/open-models/) designed for powerful reasoning, agentic tasks, and versatile developer use cases.
 
@@ -274,6 +300,17 @@ And then run:
 # On 4xH100:
 torchrun --nproc-per-node=4 -m gpt_oss.generate gpt-oss-120b/original/
 ```
+
+# Windows run example
+```shell
+python -m gpt_oss.generate --backend torch gpt-oss-20b/original/ -p "Hi" -l 10
+
+```
+#with profiler
+```shell
+kernprof -l -v -m gpt_oss.generate --backend torch gpt-oss-20b/original/ -p "Hi" -l 10
+```
+
 
 ## Reference Triton implementation (single GPU)
 
